@@ -7,6 +7,7 @@ const CHANGE_EVENT = "change";
 let _search_keyword = "";
 let _list:any = [];
 let _count: number;
+let _filter_by = "all";
 
 class Store extends EventEmitter{
     addChangeListener(callback: any) {
@@ -26,12 +27,23 @@ class Store extends EventEmitter{
     }
 
     getList(){
+        if(_filter_by && _filter_by != "all"){
+            return _list.filter((m:any) => m.id.kind === _filter_by);
+        }
+
         return _list;
     }
     
     getCount():number {
         return _count;
     }
+
+    getFilterBy():string {
+        return _filter_by;
+    }
+
+
+    
 }
 
 const store = new Store();
@@ -48,6 +60,10 @@ dispatcher.register((payload: any) => {
             break;
         case constants.COUNT:
             _count = payload.data;
+            store.emitChange();
+            break;
+        case constants.FILTER_BY:
+            _filter_by = payload.data;
             store.emitChange();
             break;
         default:
