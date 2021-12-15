@@ -1,39 +1,33 @@
 import dispatcher from "../dispatcher/AppDispatcher";
 import constants from "../constants/AppConstants";
-// import axios from "axios";
-
-import dump from "../dump.json";
+import axios from "axios";
 
 function searchAction(search: string):void|boolean{    
     if(search.trim() == "") return false;
-
-    const list = dump.items;
 
     dispatcher.dispatch({
         actionTypes: constants.SEARCH_KEYWORD,
         data: search,
     })
 
-    dispatcher.dispatch({
-        actionTypes: constants.LIST,
-        data: list,
-    })
-    
-    dispatcher.dispatch({
-        actionTypes: constants.COUNT,
-        data: 1,
-    })
+    axios.get(`${constants.API_URL}?part=snippet&q=${search}&key=${constants.API_KEY}&maxResults=${constants.MAX_RESULT}`)
+    .then(( { data }) => {
+        
+        const { items, pageInfo } = data;
 
-    /* axios.get(`${constants.API_URL}?part=snippet&q=${search}&key=${constants.API_KEY}&maxResults=${constants.MAX_RESULT}`)
-    .then((response) => {
         dispatcher.dispatch({
-            actionTypes: constants.SEARCH_KEYWORD,
-            data: response,
+            actionTypes: constants.LIST,
+            data: items,
+        })
+        
+        dispatcher.dispatch({
+            actionTypes: constants.COUNT,
+            data: pageInfo.totalResults,
         })
     })
-    .catch((error) => {
-        // throw new Error(error);
-    }) */
+    .catch((error:any) => {
+        throw new Error(error);
+    })
 }
 
 export default searchAction;
