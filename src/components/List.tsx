@@ -25,7 +25,7 @@ function List(props: any) {
                             <a className="list__link" href={`https://www.youtube.com/channel/${videos.snippet.channelId}`}>{videos.snippet.channelTitle}</a>
                         </span>}
 
-                        <p className="list__description">{videos.snippet.description}</p>
+                        {props.isMobile && <p className="list__description">{videos.snippet.description}</p>}
                     </div>
                 </div>
             ))}
