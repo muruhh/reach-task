@@ -1,6 +1,8 @@
 import dispatcher from "../dispatcher/AppDispatcher";
 import constants from "../constants/AppConstants";
 import axios from "axios";
+import loadingAction from "../actions/LoadingActions";
+import dump from "../dump.json";
 
 function searchAction(search: string):void|boolean{    
     if(search.trim() == "") return false;
@@ -10,8 +12,26 @@ function searchAction(search: string):void|boolean{
         data: search,
     })
 
-    axios.get(`${constants.API_URL}?part=snippet&q=${search}&key=${constants.API_KEY}&maxResults=${constants.MAX_RESULT}`)
-    .then(( { data }) => {
+    const {items, pageInfo } = dump;
+
+    dispatcher.dispatch({
+        actionTypes: constants.LIST,
+        data: items,
+    })
+    
+    dispatcher.dispatch({
+        actionTypes: constants.COUNT,
+        data: pageInfo.totalResults,
+    })
+    
+    loadingAction(false);
+    
+   
+ 
+    
+    
+    /* axios.get(`${constants.API_URL}?part=snippet&q=${search}&key=${constants.API_KEY}&maxResults=${constants.MAX_RESULT}`)
+    .then( ({ data }) => {
         
         const { items, pageInfo } = data;
 
@@ -25,9 +45,12 @@ function searchAction(search: string):void|boolean{
             data: pageInfo.totalResults,
         })
     })
+    .then(() => {
+        loadingAction(false);
+    })
     .catch((error:any) => {
         throw new Error(error);
-    })
+    }) */
 }
 
 export default searchAction;

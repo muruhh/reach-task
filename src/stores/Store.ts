@@ -8,6 +8,7 @@ let _search_keyword = "";
 let _list:any = [];
 let _count: number;
 let _filter_by = "all";
+let _loading= false;
 
 class Store extends EventEmitter{
     addChangeListener(callback: any) {
@@ -27,10 +28,7 @@ class Store extends EventEmitter{
     }
 
     getList(){
-        if(_filter_by && _filter_by != "all"){
-            return _list.filter((m:any) => m.id.kind === _filter_by);
-        }
-
+        if(_filter_by && _filter_by != "all") return _list.filter((m:any) => m.id.kind === _filter_by);
         return _list;
     }
     
@@ -42,8 +40,9 @@ class Store extends EventEmitter{
         return _filter_by;
     }
 
-
-    
+    getDisplayLoading():boolean {
+        return _loading;
+    }
 }
 
 const store = new Store();
@@ -64,6 +63,10 @@ dispatcher.register((payload: any) => {
             break;
         case constants.FILTER_BY:
             _filter_by = payload.data;
+            store.emitChange();
+            break;
+        case constants.DISPLAY_LOADING:
+            _loading = payload.data;
             store.emitChange();
             break;
         default:

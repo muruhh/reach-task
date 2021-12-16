@@ -232,7 +232,33 @@ $secondary-background: #fff;
     padding: 0 15px;
   }
 
+  .loading{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: #fff;
+
+    &__icon{
+      margin-bottom: 15px;
+      fill: #999;
+    }
+
+    &__title{
+      font-size: 18px;
+    }
+
+  }
+
   .navbar{
+    position: relative;
+    z-index: 12;
     padding: 12px 0;
     background-color: #f00;
 
