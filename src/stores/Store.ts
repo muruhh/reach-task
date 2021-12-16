@@ -2,75 +2,75 @@ import { EventEmitter } from "events";
 import dispatcher from "../dispatcher/AppDispatcher";
 import constants from "../constants/AppConstants";
 
-
 const CHANGE_EVENT = "change";
 let _search_keyword = "";
-let _list:any = [];
+let _list: any = [];
 let _count: number;
 let _filter_by = "all";
-let _loading= false;
+let _loading = false;
 
-class Store extends EventEmitter{
-    addChangeListener(callback: any) {
-        this.on(CHANGE_EVENT, callback);
-    }
+class Store extends EventEmitter {
+	addChangeListener(callback: any) {
+		this.on(CHANGE_EVENT, callback);
+	}
 
-    removeChangeListener(callback: any) {
-        this.removeListener(CHANGE_EVENT, callback);
-    }
+	removeChangeListener(callback: any) {
+		this.removeListener(CHANGE_EVENT, callback);
+	}
 
-    emitChange() {
-        this.emit(CHANGE_EVENT);
-    }
+	emitChange() {
+		this.emit(CHANGE_EVENT);
+	}
 
-    getSearchResult():string {
-        return _search_keyword;
-    }
+	getSearchResult(): string {
+		return _search_keyword;
+	}
 
-    getList(){
-        if(_filter_by && _filter_by != "all") return _list.filter((m:any) => m.id.kind === _filter_by);
-        return _list;
-    }
-    
-    getCount():number {
-        return _count;
-    }
+	getList() {
+		if (_filter_by && _filter_by != "all")
+			return _list.filter((m: any) => m.id.kind === _filter_by);
+		return _list;
+	}
 
-    getFilterBy():string {
-        return _filter_by;
-    }
+	getCount(): number {
+		return _count;
+	}
 
-    getDisplayLoading():boolean {
-        return _loading;
-    }
+	getFilterBy(): string {
+		return _filter_by;
+	}
+
+	getDisplayLoading(): boolean {
+		return _loading;
+	}
 }
 
 const store = new Store();
 
 dispatcher.register((payload: any) => {
-    switch (payload.actionTypes) {
-        case constants.SEARCH_KEYWORD:
-            _search_keyword = payload.data;
-            store.emitChange();
-            break;
-        case constants.LIST:
-            _list = payload.data;
-            store.emitChange();
-            break;
-        case constants.COUNT:
-            _count = payload.data;
-            store.emitChange();
-            break;
-        case constants.FILTER_BY:
-            _filter_by = payload.data;
-            store.emitChange();
-            break;
-        case constants.DISPLAY_LOADING:
-            _loading = payload.data;
-            store.emitChange();
-            break;
-        default:
-    }
+	switch (payload.actionTypes) {
+		case constants.SEARCH_KEYWORD:
+			_search_keyword = payload.data;
+			store.emitChange();
+			break;
+		case constants.LIST:
+			_list = payload.data;
+			store.emitChange();
+			break;
+		case constants.COUNT:
+			_count = payload.data;
+			store.emitChange();
+			break;
+		case constants.FILTER_BY:
+			_filter_by = payload.data;
+			store.emitChange();
+			break;
+		case constants.DISPLAY_LOADING:
+			_loading = payload.data;
+			store.emitChange();
+			break;
+		default:
+	}
 });
 
 export default store;
